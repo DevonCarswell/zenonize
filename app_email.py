@@ -9,9 +9,7 @@ import dns.resolver
 def send_email(email, email_hash, nickname):
     
     sender_email = os.environ["GMAIL_EMAIL"]
-    print(sender_email)
     app_password = os.environ["GMAIL_APP_PASSWORD"]
-    print(app_password)
     receiver_email = sender_email  # saját magadnak küldjük
 
     msg = MIMEMultipart()

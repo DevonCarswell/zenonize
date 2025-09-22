@@ -157,11 +157,4 @@ def calculate_results(github_token, nickname, email):
     components.html(html_content_2, height=800)
 
 
-
-
-
-    #Email küldése eredményekről + infos cucc:
-    if github_token != None: #Felhő futtatás
-        app_email.send_results(email, nickname, max_profit)
-
-    
+    app_email.send_results(email, nickname, max_profit)

@@ -4,14 +4,11 @@ import streamlit.components.v1 as components
 import hashlib
 import sys, os
 import time
-import psycopg2
-from sqlalchemy import create_engine
+from db_utils import get_db_connection
 
 from concurrent.futures import ThreadPoolExecutor
 from streamlit_scroll_to_top import scroll_to_here
 import app_modify_tables, app_modify_GitTable, app_display_results, app_display_parameters, app_email, app_final_result, app_game_description
-
-
 
 
 # --- SESSION STATE INIT ---
@@ -138,10 +135,7 @@ elif not st.session_state.logged_in:
                 st.session_state.logged_in = True
             
                 #E-mail küldése bejenlentkezésről! -- Csak guthubos deploy esetén menjen ki az e-mail
-                if github_token == None: #Lokális futtatás
-                    print("Not sending e-mail in local run.")
-                else:
-                    app_email.send_email(email, st.session_state.email_hash, nickname)
+                app_email.send_email(email, st.session_state.email_hash, nickname)
 
                 st.session_state.show_game_intro = True
                 scroll_Delay()
@@ -192,14 +186,7 @@ else:
         st.rerun()
     
     st.markdown("<hr style='border:1px solid rgba(241, 89, 34, 0.3); margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
-
-
-    # Database connection setup using SQLAlchemy
-    def get_db_connection():
-        db_url = f"postgresql://{st.secrets['DB_USER']}:{st.secrets['DB_PASSWORD']}@{st.secrets['DB_HOST']}:{st.secrets['DB_PORT']}/{st.secrets['DB_NAME']}"
-        engine = create_engine(db_url)
-        return engine
-
+    
     @st.cache_data
     def load_data():
         # Connect to the database and fetch data
@@ -276,18 +263,17 @@ else:
                 email_hash = st.session_state.get("email_hash")
 
                 # --- 1. Háttérfüggvény: paraméterekkel dolgozik, NEM session_state-tel ---
-                def update_tables(nickname, email_hash, profit_value, github_token):
+                def update_tables(nickname, attempt_index, profit_value, github_token):
                     if github_token is None:  # Lokális futtatás
-                        app_modify_tables.update_player_attempt(nickname, email_hash, profit_value)
+                        app_modify_tables.update_player_attempt(nickname, attempt_index, profit_value)
                         app_modify_tables.update_leaderboard(nickname, profit_value)
                     else:  # Cloud futtatás
-                        app_modify_GitTable.update_player_attempt(nickname, email_hash, profit_value, "lapatinszki/simulator-app")
+                        app_modify_GitTable.update_player_attempt(nickname, attempt_index, profit_value, "lapatinszki/simulator-app")
                         app_modify_GitTable.update_leaderboard(nickname, profit_value, "lapatinszki/simulator-app")
-
 
                 # --- 2. Háttérszál indítása ---
                 executor = ThreadPoolExecutor(max_workers=1)
-                future = executor.submit(update_tables, nickname, email_hash, profit_value, github_token)
+                future = executor.submit(update_tables, nickname, st.session_state.current_tab, profit_value, github_token)
 
                 # --- 3. GIF lejátszása ---
                 start_time = time.time()
