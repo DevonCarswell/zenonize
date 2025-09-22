@@ -7,7 +7,7 @@ from streamlit_autorefresh import st_autorefresh
 st_autorefresh(interval=10 * 1000, key="leaderboard_refresh")
 
 # ---------- Streamlit UI ----------
-st.image("header.png", use_container_width=True)
+st.image("header.png", width='stretch')
 st.subheader("Leaderboard 🏆")
 
 

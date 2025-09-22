@@ -4,6 +4,8 @@ import streamlit.components.v1 as components
 import hashlib
 import sys, os
 import time
+import psycopg2
+from sqlalchemy import create_engine
 
 from concurrent.futures import ThreadPoolExecutor
 from streamlit_scroll_to_top import scroll_to_here
@@ -72,7 +74,7 @@ elif st.session_state.scroll_to_top_Delay:
 elif not st.session_state.logged_in:
 
 
-    st.image("header.png", use_container_width=True)
+    st.image("header.png", width='stretch')
     st.subheader("Welcome to the Game! 🎮")
     
     st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
@@ -161,7 +163,7 @@ elif not st.session_state.logged_in:
 
 # ------------------ JÁTÉK LEÍRÁS OLDAL -------------------
 elif st.session_state.show_game_intro:
-    st.image("header.png", use_container_width=True)
+    st.image("header.png", width='stretch')
     app_game_description.game_info()
     if st.button("Let's play"):               
         st.session_state.show_game_intro = False
@@ -179,7 +181,7 @@ elif st.session_state.show_summary:
 
 # ------------------ JÁTÉK FELÜLET ------------------
 else:
-    st.image("header.png", use_container_width=True)
+    st.image("header.png", width='stretch')
     st.subheader(f"Let's play the game, {st.session_state.nickname}! 🎮")
     st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
 
@@ -192,11 +194,21 @@ else:
     st.markdown("<hr style='border:1px solid rgba(241, 89, 34, 0.3); margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
 
 
+    # Database connection setup using SQLAlchemy
+    def get_db_connection():
+        db_url = f"postgresql://{st.secrets['DB_USER']}:{st.secrets['DB_PASSWORD']}@{st.secrets['DB_HOST']}:{st.secrets['DB_PORT']}/{st.secrets['DB_NAME']}"
+        engine = create_engine(db_url)
+        return engine
+
     @st.cache_data
     def load_data():
-        return pd.read_csv("simulation_results.csv", encoding="cp1252", header=0)
-    df = load_data()
+        # Connect to the database and fetch data
+        engine = get_db_connection()
+        query = "SELECT * FROM simulation_results"
+        df = pd.read_sql_query(query, engine)
+        return df
 
+    df = load_data()
     #Paraméterek indexel importálás:
     repo_root = os.path.dirname(os.path.abspath(__file__))
     if repo_root not in sys.path:
@@ -364,7 +376,7 @@ else:
                     if st.button("❌ No, I'll keep playing!", key=f"confirm_no_{i}"):
                         st.session_state.confirm_finish = False
                         st.rerun()
-            
+
 
 
 
