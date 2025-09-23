@@ -117,7 +117,7 @@ def display_tables(selected_row, df):
                 def highlight_profit(row):
                     styles = [''] * len(row)
                     if row["Parameter"] == "Profit":
-                        val_str = st.session_state.profit_str = f"{round(selected_row.get("Profit", None), 3):>10.3f}"
+                        val_str = st.session_state.profit_str = f"{round(selected_row.get('Profit', None), 3):>10.3f}"
                         try:
                             val = float(val_str)
                             color = "green" if val > 0 else "red"
