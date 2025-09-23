@@ -47,8 +47,8 @@ def update_player_attempt(nickname, attempt_index, profit):
         # Determine the column to update based on the attempt index
         attempt_col = f"Attempt_{attempt_index + 1}"  # Attempt_1 for index 0, Attempt_2 for index 1, etc.
 
-        # Update the corresponding attempt column
-        query = text(f'UPDATE players SET "{attempt_col}" = :profit WHERE "Nickname" = :nickname')
+        # Update the corresponding attempt column using bind parameters for column names
+        query = text('UPDATE players SET "' + attempt_col + '" = :profit WHERE "Nickname" = :nickname')
         conn.execute(query, {"profit": profit, "nickname": nickname})
         conn.commit()  # Commit the transaction to save the changes
         print(f"✅ Profit {profit} saved for {nickname} in {attempt_col}.")

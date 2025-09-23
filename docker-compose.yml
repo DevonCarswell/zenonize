@@ -18,14 +18,12 @@ services:
     build:
       context: ./db
       dockerfile: Dockerfile
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_DB: zenonize
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 2P62dm>rDLC8wDI3-:<
-    volumes:
-      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
 volumes:
   db_data:
