@@ -1,51 +1,23 @@
-# #!/bin/bash
-
-# DB_DUMP_LOCATION="/tmp/psql_data/structure.sql"
-
-# echo "*** CREATING DATABASE ***"
-
-# psql -U postgres < "$DB_DUMP_LOCATION";
-
-# echo "*** DATABASE CREATED! ***"
-
 #!/bin/bash
+set -e  # Exit immediately if a command exits with a non-zero status
+set -x  # Print each command before executing it
 
-# this script is run when the docker container is built
-# it imports the base database structure and create the database for the tests
+# Log file for debugging
+LOG_FILE="/tmp/init_docker_postgres.log"
 
-DATABASE_NAME="zenonize"
-DB_DUMP_LOCATION="/tmp/psql_data/zenonize.sql"
+# Redirect stdout and stderr to the log file
+exec > >(tee -a "$LOG_FILE") 2>&1
 
-echo "*** CREATING DATABASE ***"
+echo "Starting PostgreSQL initialization script..."
 
-# create default database
-gosu postgres postgres --single <<EOSQL
-    CREATE DATABASE "$DATABASE_NAME";
-    GRANT ALL PRIVILEGES ON DATABASE "$DATABASE_NAME" TO postgres;
-EOSQL
+# Check if the SQL file exists
+if [ -f "/tmp/psql_data/zenonize.sql" ]; then
+    echo "Found zenonize.sql, restoring database..."
+    psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /tmp/psql_data/zenonize.sql
+    echo "Database restored successfully."
+else
+    echo "Error: zenonize.sql not found in /tmp/psql_data/"
+    exit 1
+fi
 
-# clean sql_dump - because I want to have a one-line command
-
-# remove indentation
-sed "s/^[ \t]*//" -i "$DB_DUMP_LOCATION"
-
-# remove comments
-sed '/^--/ d' -i "$DB_DUMP_LOCATION"
-
-# remove new lines
-sed ':a;N;$!ba;s/\n/ /g' -i "$DB_DUMP_LOCATION"
-
-# remove other spaces
-sed 's/  */ /g' -i "$DB_DUMP_LOCATION"
-
-# remove firsts line spaces
-sed 's/^ *//' -i "$DB_DUMP_LOCATION"
-
-# append new line at the end (suggested by @Nicola Ferraro)
-sed -e '$a\' -i "$DB_DUMP_LOCATION"
-
-# import sql_dump
-gosu postgres postgres --single "$DATABASE_NAME" < "$DB_DUMP_LOCATION";
-
-
-echo "*** DATABASE CREATED! ***"
+echo "PostgreSQL initialization script completed."

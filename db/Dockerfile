@@ -11,5 +11,8 @@ RUN mkdir -p /tmp/psql_data/
 
 COPY zenonize.sql /tmp/psql_data/
 COPY init_docker_postgres.sh /docker-entrypoint-initdb.d/
+# Ensure the initialization script is executable
+RUN chmod +x /docker-entrypoint-initdb.d/init_docker_postgres.sh
+
 # Expose the PostgreSQL default port
 EXPOSE 5432
