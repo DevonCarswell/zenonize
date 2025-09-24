@@ -4,43 +4,67 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import re, os
 import dns.resolver
+from email.utils import formataddr
 
-# Küldés saját Gmailre - bejelentkezés logolása:
-def send_email(email, email_hash, nickname):
+# Küldés saját Emailre - bejelentkezés logolása:
+def send_email(email, email_hash, nickname, agree_w_news):
     
-    sender_email = os.environ["GMAIL_EMAIL"]
-    print(sender_email)
-    app_password = os.environ["GMAIL_APP_PASSWORD"]
-    print(app_password)
-    receiver_email = sender_email  # saját magadnak küldjük
+    # Secrets betöltése
+    smtp_server = st.secrets["email"]["smtp_server"]
+    smtp_port = st.secrets["email"]["smtp_port"]
+    smtp_username = st.secrets["email"]["smtp_username"]
+    smtp_password = st.secrets["email"]["smtp_password"]
+    smtp_helo = st.secrets["email"]["smtp_helo"]
 
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = f"Új belépés: {nickname}"
+    # Email adatok
+    sender_name = "IDM Systems Zrt."
+    sender_email = st.secrets["email"]["sender_email"]
+    receiver_email = st.secrets["email"]["reciever_email"]
 
-    body = f"Email: {email}\nEmail hash kód: {email_hash}\nNickname: {nickname}"
-    msg.attach(MIMEText(body, 'plain'))
+    subject = f"Login: {nickname}  - news: {agree_w_news}"
+    body = f"""
+    <html>
+    <body>
+        <b>Nickname:</b> {nickname}<br>
+        <b>Email:</b> {email}<br>
+        <b>News:</b> {agree_w_news}<br>
+        <b>Hash ID:</b> {email_hash}     
+    </body>
+    </html>
+    """
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(sender_email, app_password)
-    server.sendmail(sender_email, receiver_email, msg.as_string())
-    server.quit()
+    message = MIMEMultipart()
+    message["From"] = formataddr((sender_name, sender_email))
+    message["To"] = receiver_email
+    message["Subject"] = subject
+    message.attach(MIMEText(body, "html"))
+
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.ehlo(smtp_helo)
+            server.starttls()  # STARTTLS a Mailtrap port 587-hez
+            server.login(smtp_username, smtp_password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+    except Exception as e:
+        st.error(f"Hiba történt: {e}")
 
 
 
 #Eredmény elküldése felhasználó e-mailre:
 def send_results(receiver_email, nickname, profit):
 
-    sender_email = os.environ["GMAIL_EMAIL"]
-    app_password = os.environ["GMAIL_APP_PASSWORD"]
+    # Secrets betöltése
+    smtp_server = st.secrets["email"]["smtp_server"]
+    smtp_port = st.secrets["email"]["smtp_port"]
+    smtp_username = st.secrets["email"]["smtp_username"]
+    smtp_password = st.secrets["email"]["smtp_password"]
+    smtp_helo = st.secrets["email"]["smtp_helo"]
 
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = "🏆 Factory Manager Challenge – Your results are in!"
-
+    # Email adatok
+    sender_name = "IDM Systems Zrt."
+    sender_email = st.secrets["email"]["sender_email"]
+    receiver_email = receiver_email
+    subject = "🏆 Factory Manager Challenge – Your results are in!"
     body = f"""
      <html>
      <body>
@@ -66,20 +90,24 @@ def send_results(receiver_email, nickname, profit):
      </body>
      </html>
      """
-    msg.attach(MIMEText(body, 'html', 'utf-8'))
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(sender_email, app_password)
+
+    message = MIMEMultipart()
+    message["From"] = formataddr((sender_name, sender_email))
+    message["To"] = receiver_email
+    message["Subject"] = subject
+    message.attach(MIMEText(body, "html"))
+
     try:
-        server.sendmail(sender_email, [receiver_email], msg.as_string())
-    except smtplib.SMTPRecipientsRefused as e:
-        st.error(f"Failed to send email. Recipient refused: {e.recipients}")
-    server.quit()
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.ehlo(smtp_helo)
+            server.starttls()  # STARTTLS a Mailtrap port 587-hez
+            server.login(smtp_username, smtp_password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+    except Exception as e:
+        st.error(f"Hiba történt: {e}")
 
 
-
-     
 
 
 #Checkolja az email címet:

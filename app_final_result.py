@@ -25,13 +25,11 @@ def calculate_results(github_token, nickname, email):
 
         rank_str = ordinal(rank)
 
-    gap_height = 60  # itt állítod a magasságot
-
-    html_gap = f"""
-    <div style="height:{gap_height}px;"></div>
-    """
-
-    components.html(html_gap, height=gap_height)
+    # gap_height = 70  # itt állítod a magasságot
+    # html_gap = f"""
+    # <div style="height:{gap_height}px;"></div>
+    # """
+    # components.html(html_gap, height=gap_height)
 
 
     html_content_1 = f"""
@@ -73,7 +71,7 @@ def calculate_results(github_token, nickname, email):
     </style>
 
     <div class="container">
-        <div class="slide-up delay-1" style='font-size:18px; margin-bottom:5px;'>
+        <div class="slide-up delay-1" style='font-size:18px; margin-bottom:5px; margin-top:100px;'>
             Your highest profit: <span style="color:#F15922; font-weight:bold;">{max_profit:.2f} €</span>
         </div>
 
@@ -90,9 +88,10 @@ def calculate_results(github_token, nickname, email):
         document.addEventListener('DOMContentLoaded', function() {{
             setTimeout(() => {{
                 confetti({{
-                    particleCount: 150,
+                    particleCount: 300,
                     spread: 100,
-                    origin: {{ y: 0.5 }}
+                     startVelocity: 30,
+                    origin: {{ y: 0.70 }}
                 }});
             }}, 1900);
         }});
@@ -103,7 +102,7 @@ def calculate_results(github_token, nickname, email):
         </div>
     </div>
     """
-    components.html(html_content_1, height=200)
+    components.html(html_content_1, height=335)
 
 
     html_content_2 = """
@@ -141,7 +140,7 @@ def calculate_results(github_token, nickname, email):
     </style>
 
     <div class="container">
-        <div class="slide-up delay-5" style='font-size:18px; font-weight:bold; color:#F15922; margin-top:50px;'>
+        <div class="slide-up delay-5" style='font-size:18px; font-weight:bold; color:#F15922; margin-top:40px;'>
             What’s the ROI of turning 27 variables into one clear decision?
         </div>
 

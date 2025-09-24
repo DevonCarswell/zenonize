@@ -1,6 +1,8 @@
 import pandas as pd
 import io
+import time
 from github import Github
+from github import GithubException
 import streamlit as st
 
 # -------------------------------------------------------------------------------------------
@@ -22,18 +24,42 @@ def load_csv_from_github(repo_name, file_path):
         return pd.DataFrame(), None
 
 
-def save_csv_to_github(df, repo_name, file_path, sha=None, commit_message="Update CSV"):
+def save_csv_to_github(df, repo_name, file_path, sha=None, commit_message="Update CSV", retry_update_func=None, retry_args=None):
     #Mentés GitHub repo-ba commit-tal.
     token = st.secrets["GITHUB_TOKEN"]
     g = Github(token)
     repo = g.get_repo(repo_name)
-    csv_buffer = io.StringIO()
-    df.to_csv(csv_buffer, index=False)
-    csv_content = csv_buffer.getvalue()
-    if sha:
-        repo.update_file(file_path, commit_message, csv_content, sha)
-    else:
-        repo.create_file(file_path, commit_message, csv_content)
+
+    while True:
+        try:
+            csv_buffer = io.StringIO()
+            df.to_csv(csv_buffer, index=False)
+            csv_content = csv_buffer.getvalue()
+            if sha:
+                repo.update_file(file_path, commit_message, csv_content, sha)
+            else:
+                repo.create_file(file_path, commit_message, csv_content)
+            break
+
+        except GithubException as e:
+            if e.status == 409:
+                time.sleep(2)
+
+                # Újraolvasás GitHub-ból
+                contents = repo.get_contents(file_path)
+                csv_str = contents.decoded_content.decode("utf-8")
+                df = pd.read_csv(io.StringIO(csv_str))
+                df.columns = df.columns.str.strip()
+                sha = contents.sha
+
+                # Újraalkalmazzuk a user változtatását
+                if retry_update_func:
+                    df = retry_update_func(df, *retry_args)
+
+                continue
+            else:
+                raise
+            
 
 
 
@@ -70,26 +96,36 @@ def login_player(nickname, email_code, repo_name, players_file="table_Players.cs
 def update_player_attempt(nickname, email_code, profit, repo_name, players_file="table_Players.csv"):
     players, sha = load_csv_from_github(repo_name, players_file)
 
-    player_index = players.index[players["Nickname"] == nickname].tolist()
-    if not player_index:
-        raise ValueError(f"Player with nickname '{nickname}' not found in table. Did you login first?")
-    idx = player_index[0]
+    def apply_update(players_df, nickname, email_code, profit):
+        player_index = players_df.index[players_df["Nickname"] == nickname].tolist()
+        if not player_index:
+            raise ValueError(f"Player '{nickname}' not found.")
+        idx = player_index[0]
 
-    if "E-mail_code" in players.columns:
-        players.loc[idx, "E-mail_code"] = email_code
+        if "E-mail_code" in players_df.columns:
+            players_df.loc[idx, "E-mail_code"] = email_code
 
-    attempt_cols = [col for col in players.columns if col.startswith("Attempt_")]
-    updated = False
-    for col in attempt_cols:
-        if pd.isna(players.loc[idx, col]) or players.loc[idx, col] == "":
-            players.loc[idx, col] = profit
-            updated = True
-            break
-    if not updated:
-        raise ValueError(f"No empty Attempt columns left for player '{nickname}'.")
+        attempt_cols = [col for col in players_df.columns if col.startswith("Attempt_")]
+        for col in attempt_cols:
+            if pd.isna(players_df.loc[idx, col]) or players_df.loc[idx, col] == "":
+                players_df.loc[idx, col] = profit
+                return players_df
+        raise ValueError(f"No empty Attempt columns left for '{nickname}'.")
 
-    save_csv_to_github(players, repo_name, players_file, sha, commit_message=f"Update {nickname} attempt")
+    # Első próbálkozás
+    players = apply_update(players, nickname, email_code, profit)
+
+    save_csv_to_github(
+        players,
+        repo_name,
+        players_file,
+        sha,
+        commit_message=f"Update {nickname} attempt",
+        retry_update_func=apply_update,
+        retry_args=(nickname, email_code, profit)
+    )
     return players
+
 
 
 # -------------------------------------------------------------------------------------------
@@ -123,6 +159,5 @@ def get_rank_for_profit(profit, repo_name, leaderboard_file="table_Leaderboard.c
     lb_df = lb_df.sort_values(by="Profit", ascending=False).reset_index(drop=True)
     rank = (lb_df["Profit"] > profit).sum() + 1
     return rank
-
 
 

@@ -76,12 +76,13 @@ elif not st.session_state.logged_in:
     st.subheader("Welcome to the Game! 🎮")
     
     st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
-    email = st.text_input("**Enter your e-mail address:** - *it will not be shown publicly*", placeholder="letsplayagame@gmail.com")
-    nickname = st.text_input("**Enter your nickname:** - *this will be your public identifier*", placeholder="I am the winner")
+    email = st.text_input("**E-mail address** * - *it will not be shown publicly*", placeholder="letsplayagame@gmail.com")
+    nickname = st.text_input("**Nickname:** * - *this will be your public identifier*", placeholder="I am the winner")
 
     # A részletes Terms szöveg külön szakaszban
     #with st.expander("Detailed Terms and Conditions"):
-    agree = st.checkbox("I agree to the Terms and Conditions")
+    agree = st.checkbox("I agree to the Terms and Conditions - Game *")
+    agree_w_news = st.checkbox("I agree to the Terms and Conditions - News")
     st.markdown(
         """
         <div style='font-size:12px; line-height:1.4; text-align: justify; text-justify: inter-word;'>
@@ -93,6 +94,8 @@ elif not st.session_state.logged_in:
         unsafe_allow_html=True
     )
     #st.markdown("") #Üres sor
+    
+
 
     # JS script hozzáadása
     st.markdown("""
@@ -139,7 +142,7 @@ elif not st.session_state.logged_in:
                 if github_token == None: #Lokális futtatás
                     print("Not sending e-mail in local run.")
                 else:
-                    app_email.send_email(email, st.session_state.email_hash, nickname)
+                    app_email.send_email(email, st.session_state.email_hash, nickname, agree_w_news)
 
                 st.session_state.show_game_intro = True
                 scroll_Delay()
@@ -279,16 +282,19 @@ else:
 
                 # --- 3. GIF lejátszása ---
                 start_time = time.time()
-                app_display_results.play_the_GIF()
+                overlay_placeholder = app_display_results.play_the_GIF()  # elindítja a gifet
 
-                # minimum várakozás
-                gif_duration = 5
-                elapsed = time.time() - start_time
-                if elapsed < gif_duration:
-                    time.sleep(gif_duration - elapsed)
+                # minimum 5 másodperc + a háttérszál végéig
+                gif_min_duration = 5
+                while True:
+                    elapsed = time.time() - start_time
+                    if elapsed >= gif_min_duration and future.done():
+                        break
+                    time.sleep(0.1)  # rövid szünet, hogy ne pörögjön a CPU fölöslegesen
 
                 # --- 4. Várjuk meg a háttér futás végét ---
-                future.result()
+                overlay_placeholder.empty() #Leveszi a GIF-et
+                result = future.result()
 
 
                 # --- Attempt mentése Profit-tal együtt ---
