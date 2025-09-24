@@ -103,7 +103,7 @@ def display_inputs(attempt_idx):
                 """, unsafe_allow_html=True)
 
                 selected_label = st.slider(
-                    "",  # üres label
+                    " ",  # üres label
                     min_value=min_val,
                     max_value=max_val,
                     step=step_val,
@@ -133,7 +133,7 @@ def display_inputs(attempt_idx):
                 """, unsafe_allow_html=True)
                 
                 selected_label = st.radio(
-                    "",  # üres label
+                    " ",  # üres label
                     options,
                     index=index,
                     horizontal=False

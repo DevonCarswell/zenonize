@@ -72,7 +72,7 @@ elif st.session_state.scroll_to_top_Delay:
 elif not st.session_state.logged_in:
 
 
-    st.image("header.png", use_container_width=True)
+    st.image("header.png", width='content')
     st.subheader("Welcome to the Game! 🎮")
     
     st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
@@ -164,7 +164,7 @@ elif not st.session_state.logged_in:
 
 # ------------------ JÁTÉK LEÍRÁS OLDAL -------------------
 elif st.session_state.show_game_intro:
-    st.image("header.png", use_container_width=True)
+    st.image("header.png", width='content')
     app_game_description.game_info()
     if st.button("Let's play"):               
         st.session_state.show_game_intro = False
@@ -182,7 +182,7 @@ elif st.session_state.show_summary:
 
 # ------------------ JÁTÉK FELÜLET ------------------
 else:
-    st.image("header.png", use_container_width=True)
+    st.image("header.png", width='content')
     st.subheader(f"Let's play the game, {st.session_state.nickname}! 🎮")
     st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
 

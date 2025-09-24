@@ -127,7 +127,7 @@ def display_tables(selected_row, df):
                     return styles
 
                 styled_df = group_df.style.apply(highlight_profit, axis=1)
-                st.dataframe(styled_df, use_container_width=True, hide_index=True)
+                st.dataframe(styled_df, width='content', hide_index=True)
             else:
                 st.info("Nincs adat ebben a csoportban.")
 
