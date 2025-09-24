@@ -320,10 +320,6 @@ else:
             app_display_results.display_tables(selected_row, df)
             app_display_results.display_charts(selected_row, df)
 
-
-
-
-
             # ---------------------------------------------------------------------
             # ---------------------------------------------------------------------
             # Csak akkor jelenjen meg a "New attempt" gomb és a "View results" gomb,
@@ -362,11 +358,4 @@ else:
                     if st.button("❌ No, I'll keep playing!", key=f"confirm_no_{i}"):
                         st.session_state.confirm_finish = False
                         st.rerun()
-
-
-
-
-
-
-
 

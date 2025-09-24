@@ -87,6 +87,6 @@ def get_rank_for_profit(profit):
     with engine.connect() as conn:
         query = text('SELECT COUNT(*) + 1 AS rank FROM leaderboard WHERE "Profit" > :profit')
         result = conn.execute(query, {"profit": profit}).fetchone()
-
+        print(f"✅✅✅{result}✅✅✅")
         # Access the rank using the index (0) instead of a string key
         return result[0] if result else 1
