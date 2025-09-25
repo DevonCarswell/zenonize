@@ -5,7 +5,6 @@ import hashlib
 import sys, os
 import time
 
-from concurrent.futures import ThreadPoolExecutor
 from streamlit_scroll_to_top import scroll_to_here
 import app_modify_tables, app_modify_GitTable, app_display_results, app_display_parameters, app_email, app_final_result, app_game_description
 
@@ -266,36 +265,23 @@ else:
                 nickname = st.session_state.get("nickname")
                 email_hash = st.session_state.get("email_hash")
 
-                # --- 1. Háttérfüggvény: paraméterekkel dolgozik, NEM session_state-tel ---
-                def update_tables(nickname, email_hash, profit_value, github_token):
-                    if github_token is None:  # Lokális futtatás
-                        app_modify_tables.update_player_attempt(nickname, email_hash, profit_value, attempt_idx)
-                        app_modify_tables.update_leaderboard(nickname, profit_value)
-                    else:  # Cloud futtatás
-                        app_modify_GitTable.update_player_attempt(nickname, email_hash, profit_value, "lapatinszki/simulator-app")
-                        app_modify_GitTable.update_leaderboard(nickname, profit_value, "lapatinszki/simulator-app")
-
-
-                # --- 2. Háttérszál indítása ---
-                executor = ThreadPoolExecutor(max_workers=1)
-                future = executor.submit(update_tables, nickname, email_hash, profit_value, github_token)
-
-                # --- 3. GIF lejátszása ---
+                # --- Show animation and update database ---
                 start_time = time.time()
-                overlay_placeholder = app_display_results.play_the_GIF()  # elindítja a gifet
+                overlay_placeholder = app_display_results.play_the_GIF()
 
-                # minimum 5 másodperc + a háttérszál végéig
-                gif_min_duration = 5
-                while True:
-                    elapsed = time.time() - start_time
-                    if elapsed >= gif_min_duration and future.done():
-                        break
-                    time.sleep(0.1)  # rövid szünet, hogy ne pörögjön a CPU fölöslegesen
+                # Update database
+                if github_token is None:  # Lokális futtatás
+                    app_modify_tables.update_player_attempt(nickname, email_hash, profit_value, attempt_idx)
+                    app_modify_tables.update_leaderboard(nickname, profit_value)
+                # else:  # Cloud futtatás
+                #     app_modify_GitTable.update_player_attempt(nickname, email_hash, profit_value, "lapatinszki/simulator-app")
+                #     app_modify_GitTable.update_leaderboard(nickname, profit_value, "lapatinszki/simulator-app")
 
-                # --- 4. Várjuk meg a háttér futás végét ---
-                overlay_placeholder.empty() #Leveszi a GIF-et
-                result = future.result()
+                # Keep animation for minimum duration
+                while time.time() - start_time < 5:  # minimum 5 seconds animation
+                    time.sleep(0.1)
 
+                overlay_placeholder.empty()  # Remove the GIF
 
                 # --- Attempt mentése Profit-tal együtt ---
                 selections_with_profit = selections.copy()
