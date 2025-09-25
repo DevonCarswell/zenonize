@@ -69,7 +69,7 @@ def display_inputs(attempt_idx):
         col = cols[col_idx]
 
         # Tooltip szöveg
-        tooltip_text = info_texts.get(col_name, "")
+        tooltip_text = info_texts.get(col_name, "").replace("\n", "<br>")
 
         # Előző attempt értéke
         if st.session_state.back_to_info_values.get(col_name) is not None:
@@ -98,7 +98,7 @@ def display_inputs(attempt_idx):
                         <strong>{label}:</strong>
                     </div>
                     <div style='font-size:12px; color:#919090; margin:0 0 0px 0, white-space:pre-line;'>
-                        {tooltip_text.replace("\n", "<br>")}
+                        {tooltip_text}
                     </div>
                 """, unsafe_allow_html=True)
 
@@ -128,7 +128,7 @@ def display_inputs(attempt_idx):
                         <strong>{label}:</strong>
                     </div>
                     <div style='font-size:12px; color:#919090; margin:0 0 0px 0, white-space:pre-line;'>
-                        {tooltip_text.replace("\n", "<br>")}
+                        {tooltip_text}
                     </div>
                 """, unsafe_allow_html=True)
                 
