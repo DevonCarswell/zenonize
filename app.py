@@ -126,8 +126,8 @@ elif not st.session_state.logged_in:
 
             if github_token == None: #Lokális futtatás
                 players = app_modify_tables.login_player(nickname, st.session_state.email_hash)
-            else: #Cloud futtatás
-                players = app_modify_GitTable.login_player(nickname, st.session_state.email_hash, "lapatinszki/simulator-app")
+            # else: #Cloud futtatás
+            #     players = app_modify_GitTable.login_player(nickname, st.session_state.email_hash, "lapatinszki/simulator-app")
                 
 
 
@@ -141,8 +141,8 @@ elif not st.session_state.logged_in:
                 #E-mail küldése bejenlentkezésről! -- Csak guthubos deploy esetén menjen ki az e-mail
                 if github_token == None: #Lokális futtatás
                     print("Not sending e-mail in local run.")
-                else:
-                    app_email.send_email(email, st.session_state.email_hash, nickname, agree_w_news)
+                # else:
+                #     app_email.send_email(email, st.session_state.email_hash, nickname, agree_w_news)
 
                 st.session_state.show_game_intro = True
                 scroll_Delay()
@@ -269,7 +269,7 @@ else:
                 # --- 1. Háttérfüggvény: paraméterekkel dolgozik, NEM session_state-tel ---
                 def update_tables(nickname, email_hash, profit_value, github_token):
                     if github_token is None:  # Lokális futtatás
-                        app_modify_tables.update_player_attempt(nickname, email_hash, profit_value)
+                        app_modify_tables.update_player_attempt(nickname, email_hash, profit_value, attempt_idx)
                         app_modify_tables.update_leaderboard(nickname, profit_value)
                     else:  # Cloud futtatás
                         app_modify_GitTable.update_player_attempt(nickname, email_hash, profit_value, "lapatinszki/simulator-app")

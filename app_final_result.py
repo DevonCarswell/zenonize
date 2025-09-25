@@ -12,8 +12,8 @@ def calculate_results(github_token, nickname, email):
 
         if github_token == None: #Lokális futtatás
             rank = app_modify_tables.get_rank_for_profit(max_profit)
-        else: #Cloud futtatás
-            rank = app_modify_GitTable.get_rank_for_profit(max_profit, "lapatinszki/simulator-app")
+        # else: #Cloud futtatás
+        #     rank = app_modify_GitTable.get_rank_for_profit(max_profit, "lapatinszki/simulator-app")
 
         # --- Ordinal suffix függvény ---
         def ordinal(n):
