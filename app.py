@@ -4,6 +4,7 @@ import streamlit.components.v1 as components
 import hashlib
 import sys, os
 import time
+import app_leaderboard
 
 from streamlit_scroll_to_top import scroll_to_here
 import app_modify_tables, app_modify_GitTable, app_display_results, app_display_parameters, app_email, app_final_result, app_game_description
@@ -24,7 +25,8 @@ if "show_summary" not in st.session_state:
     st.session_state.show_summary = False
 if "confirm_finish" not in st.session_state:
     st.session_state.confirm_finish = False
-
+if "page" not in st.session_state:
+    st.session_state.page = "login"
 
 
 # Inicializálás, ha még nem létezik
@@ -69,97 +71,104 @@ elif st.session_state.scroll_to_top_Delay:
 
 # ------------------ LOGIN KEZELÉS ------------------
 elif not st.session_state.logged_in:
+    # Make sure we always have a page state
+    if "page" not in st.session_state:
+        st.session_state.page = "login"
 
-
-    st.image("header.png", width='content')
-    st.subheader("Welcome to the Game! 🎮")
+    if st.session_state.page == "leaderboard":
+        app_leaderboard.show_leaderboard()  # run the leaderboard script
+        st.stop()        # stop further execution so only leaderboard shows
     
-    st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
-    email = st.text_input("**E-mail address** * - *it will not be shown publicly*", placeholder="letsplayagame@gmail.com")
-    nickname = st.text_input("**Nickname:** * - *this will be your public identifier*", placeholder="I am the winner")
+     # --- Login Page ---
+    elif st.session_state.page == "login":
+        st.image("header.png", width='content')
+        st.subheader("Welcome to the Game! 🎮")
+        # 🔹 Add Leaderboard button here
+        if st.button("🏆 View Leaderboard"):
+            st.session_state.page = "leaderboard"
+            st.rerun()
+        st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
+        email = st.text_input("**E-mail address** * - *it will not be shown publicly*", placeholder="letsplayagame@gmail.com")
+        nickname = st.text_input("**Nickname:** * - *this will be your public identifier*", placeholder="I am the winner")
 
-    # A részletes Terms szöveg külön szakaszban
-    #with st.expander("Detailed Terms and Conditions"):
-    agree = st.checkbox("I agree to the Terms and Conditions - Game *")
-    agree_w_news = st.checkbox("I agree to the Terms and Conditions - News")
-    st.markdown(
-        """
-        <div style='font-size:12px; line-height:1.4; text-align: justify; text-justify: inter-word;'>
-        I hereby consent to the processing of my personal data (nickname, email address) by IDM-Systems Zrt., (hereinafter: Data Controller) for the purpose of receiving newsletters with information about the company’s products, services, promotions, and events. <br><br>
+        # A részletes Terms szöveg külön szakaszban
+        #with st.expander("Detailed Terms and Conditions"):
+        agree = st.checkbox("I agree to the Terms and Conditions - Game *")
+        agree_w_news = st.checkbox("I agree to the Terms and Conditions - News")
+        st.markdown(
+            """
+            <div style='font-size:12px; line-height:1.4; text-align: justify; text-justify: inter-word;'>
+            I hereby consent to the processing of my personal data (nickname, email address) by IDM-Systems Zrt., (hereinafter: Data Controller) for the purpose of receiving newsletters with information about the company’s products, services, promotions, and events. <br><br>
 
-        I confirm that I have read and understood <a href="https://www.idm-systems.hu" target="_blank">IDM-Systems Zrt’s Privacy Notice</a> - for website visitors - and acknowledge that I may withdraw my consent at any time, without giving any reason, by clicking the "Unsubscribe" in the newsletter or by sending an email to privacy@idm-systems.hu.  
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    #st.markdown("") #Üres sor
-    
-
-
-    # JS script hozzáadása
-    st.markdown("""
-    <script>
-    const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    document.body.setAttribute('data-user-theme', theme);
-    </script>
-    """, unsafe_allow_html=True)
-
+            I confirm that I have read and understood <a href="https://www.idm-systems.hu" target="_blank">IDM-Systems Zrt’s Privacy Notice</a> - for website visitors - and acknowledge that I may withdraw my consent at any time, without giving any reason, by clicking the "Unsubscribe" in the newsletter or by sending an email to privacy@idm-systems.hu.  
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        #st.markdown("") #Üres sor
+        
 
 
+        # JS script hozzáadása
+        st.markdown("""
+        <script>
+        const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.body.setAttribute('data-user-theme', theme);
+        </script>
+        """, unsafe_allow_html=True)
 
-    if st.button("Login"):
-
-        #Checkolja e-mailt!
-        email_valid = False
-        if email != "":
-            email_valid = app_email.is_valid_email(email)
 
 
-        # Attempt login
-        if email_valid and nickname and agree:
-            
-            #Változók mentése:
-            st.session_state.email_hash = hashlib.sha256(email.encode()).hexdigest()
-            st.session_state.email = email
-            st.session_state.nickname = nickname
 
-            if github_token == None: #Lokális futtatás
-                players = app_modify_tables.login_player(nickname, st.session_state.email_hash)
-            # else: #Cloud futtatás
-            #     players = app_modify_GitTable.login_player(nickname, st.session_state.email_hash, "lapatinszki/simulator-app")
+        if st.button("Login"):
+
+            #Checkolja e-mailt!
+            email_valid = False
+            if email != "":
+                email_valid = app_email.is_valid_email(email)
+
+
+            # Attempt login
+            if email_valid and nickname and agree:
                 
+                #Változók mentése:
+                st.session_state.email_hash = hashlib.sha256(email.encode()).hexdigest()
+                st.session_state.email = email
+                st.session_state.nickname = nickname
+
+                if github_token == None: #Lokális futtatás
+                    players = app_modify_tables.login_player(nickname, st.session_state.email_hash)
+                # else: #Cloud futtatás
+                #     players = app_modify_GitTable.login_player(nickname, st.session_state.email_hash, "lapatinszki/simulator-app")
+                    
 
 
-            if players is None:
-                # Player already exists
-                st.warning(f"The nickname '{nickname}' is already taken. Please choose another one.")
+                if players is None:
+                    # Player already exists
+                    st.warning(f"The nickname '{nickname}' is already taken. Please choose another one.")
+                else:
+                    # Login successful
+                    st.session_state.logged_in = True
+                
+                    #E-mail küldése bejenlentkezésről! -- Csak guthubos deploy esetén menjen ki az e-mail
+                    # if github_token == None: #Lokális futtatás
+                    #     print("Not sending e-mail in local run.")
+                    # else:
+                    app_email.send_email(email, st.session_state.email_hash, nickname, agree_w_news)
+
+                    st.session_state.show_game_intro = True
+                    scroll_Delay()
+                    st.rerun()
             else:
-                # Login successful
-                st.session_state.logged_in = True
-            
-                #E-mail küldése bejenlentkezésről! -- Csak guthubos deploy esetén menjen ki az e-mail
-                # if github_token == None: #Lokális futtatás
-                #     print("Not sending e-mail in local run.")
-                # else:
-                app_email.send_email(email, st.session_state.email_hash, nickname, agree_w_news)
-
-                st.session_state.show_game_intro = True
-                scroll_Delay()
-                st.rerun()
-        else:
-            if email == "":
-                st.warning("Please enter your e-mail!")
-            else:
-                if email_valid == False:
-                    st.warning("Please enter a valid e-mail!")
-            if nickname == "":               
-                st.warning("Please enter your nickname!")              
-            if not agree:
-                st.warning("You must agree to the terms and conditions to proceed.")
-
-
-
-
+                if email == "":
+                    st.warning("Please enter your e-mail!")
+                else:
+                    if email_valid == False:
+                        st.warning("Please enter a valid e-mail!")
+                if nickname == "":               
+                    st.warning("Please enter your nickname!")              
+                if not agree:
+                    st.warning("You must agree to the terms and conditions to proceed.")
 
 # ------------------ JÁTÉK LEÍRÁS OLDAL -------------------
 elif st.session_state.show_game_intro:
