@@ -1,4 +1,5 @@
 from db_connection import get_db_connection
+import pandas as pd
 
 def login_player(nickname, email_code):
     # """
@@ -88,3 +89,18 @@ def get_rank_for_profit(profit):
         cursor.execute("SELECT COUNT(*) FROM leaderboard WHERE profit > ?", (profit,))
         rank = cursor.fetchone()[0] + 1
         return rank
+
+
+def get_simulation_results():
+    """Get all simulation results from the database"""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        # Read all records from simulation_results table
+        cursor.execute("SELECT * FROM simulation_results")
+        columns = [desc[0] for desc in cursor.description]  # Get column names
+        rows = cursor.fetchall()
+        
+        # Convert to pandas DataFrame
+        df = pd.DataFrame(rows, columns=columns)    
+        
+        return df

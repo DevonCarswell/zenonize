@@ -196,7 +196,11 @@ else:
 
     @st.cache_data
     def load_data():
-        return pd.read_csv("simulation_results.csv", encoding="cp1252", header=0)
+        # Import connection functions
+        import app_modify_tables
+        # Get simulation results from database
+        df = app_modify_tables.get_simulation_results()
+        return df
     df = load_data()
 
     #Paraméterek indexel importálás:
@@ -356,7 +360,7 @@ else:
                     if st.button("❌ No, I'll keep playing!", key=f"confirm_no_{i}"):
                         st.session_state.confirm_finish = False
                         st.rerun()
-            
+
 
 
 
