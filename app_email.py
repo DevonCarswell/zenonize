@@ -30,8 +30,11 @@ def send_email(email, email_hash, nickname, agree_w_news):
         Welcometo zenonize25 — we’re glad to have you with us!
         <br><br>
         If you're curious about digital industrial solutions or think we might be able to support you in any way, feel free to reach out.
-        You can reply to this email or visit our <a href="https://www.idm-systems.hu">website</a> to learn more.
+        You can reply to this email or visit our websites to learn more.
         <br><br>
+        Ready to jump in?<br>
+        • 🎮 Game: https://zenonize.idm-systems.hu/<br>
+        • 🏆 Leaderboard: https://zenonize.idm-systems.hu/?page=leaderboard<br><br>
         Looking forward to hearing from you,
         — The IDM-Team<br>
         https://idm-systems.hu
