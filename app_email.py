@@ -10,16 +10,16 @@ from email.utils import formataddr
 def send_email(email, email_hash, nickname, agree_w_news):
     
     # Secrets betöltése
-    smtp_server = st.secrets["email"]["smtp_server"]
-    smtp_port = st.secrets["email"]["smtp_port"]
-    smtp_username = st.secrets["email"]["smtp_username"]
-    smtp_password = st.secrets["email"]["smtp_password"]
-    smtp_helo = st.secrets["email"]["smtp_helo"]
+    smtp_server = st.secrets["smtp_server"]
+    smtp_port = st.secrets["smtp_port"]
+    smtp_username = st.secrets["smtp_username"]
+    smtp_password = st.secrets["smtp_password"]
+    smtp_helo = st.secrets["smtp_helo"]
 
     # Email adatok
     sender_name = "IDM Systems Zrt."
-    sender_email = st.secrets["email"]["sender_email"]
-    receiver_email = st.secrets["email"]["reciever_email"]
+    sender_email = st.secrets["sender_email"]
+    #receiver_email = st.secrets["email"]["reciever_email"]
 
     subject = f"Login: {nickname}  - news: {agree_w_news}"
     body = f"""
@@ -35,7 +35,7 @@ def send_email(email, email_hash, nickname, agree_w_news):
 
     message = MIMEMultipart()
     message["From"] = formataddr((sender_name, sender_email))
-    message["To"] = receiver_email
+    message["To"] = email
     message["Subject"] = subject
     message.attach(MIMEText(body, "html"))
 
@@ -44,7 +44,7 @@ def send_email(email, email_hash, nickname, agree_w_news):
             server.ehlo(smtp_helo)
             server.starttls()  # STARTTLS a Mailtrap port 587-hez
             server.login(smtp_username, smtp_password)
-            server.sendmail(sender_email, receiver_email, message.as_string())
+            server.sendmail(sender_email, email, message.as_string())
     except Exception as e:
         st.error(f"Hiba történt: {e}")
 
@@ -54,15 +54,15 @@ def send_email(email, email_hash, nickname, agree_w_news):
 def send_results(receiver_email, nickname, profit):
 
     # Secrets betöltése
-    smtp_server = st.secrets["email"]["smtp_server"]
-    smtp_port = st.secrets["email"]["smtp_port"]
-    smtp_username = st.secrets["email"]["smtp_username"]
-    smtp_password = st.secrets["email"]["smtp_password"]
-    smtp_helo = st.secrets["email"]["smtp_helo"]
+    smtp_server = st.secrets["smtp_server"]
+    smtp_port = st.secrets["smtp_port"]
+    smtp_username = st.secrets["smtp_username"]
+    smtp_password = st.secrets["smtp_password"]
+    smtp_helo = st.secrets["smtp_helo"]
 
     # Email adatok
     sender_name = "IDM Systems Zrt."
-    sender_email = st.secrets["email"]["sender_email"]
+    sender_email = st.secrets["sender_email"]
     receiver_email = receiver_email
     subject = "🏆 Factory Manager Challenge – Your results are in!"
     body = f"""

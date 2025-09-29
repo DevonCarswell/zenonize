@@ -138,10 +138,10 @@ elif not st.session_state.logged_in:
                 st.session_state.logged_in = True
             
                 #E-mail küldése bejenlentkezésről! -- Csak guthubos deploy esetén menjen ki az e-mail
-                if github_token == None: #Lokális futtatás
-                    print("Not sending e-mail in local run.")
+                # if github_token == None: #Lokális futtatás
+                #     print("Not sending e-mail in local run.")
                 # else:
-                #     app_email.send_email(email, st.session_state.email_hash, nickname, agree_w_news)
+                app_email.send_email(email, st.session_state.email_hash, nickname, agree_w_news)
 
                 st.session_state.show_game_intro = True
                 scroll_Delay()
