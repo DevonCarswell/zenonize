@@ -4,6 +4,14 @@ import streamlit as st
 import time
 
 def calculate_results(github_token, nickname, email):
+    # Check for leaderboard navigation first
+    col1, col2, col3 = st.columns([1.75, 2, 1])
+    with col2:
+        if st.button("🏆 View Leaderboard"):
+            st.session_state.page = "leaderboard"
+            st.rerun()
+            return  # Return early to prevent rest of calculations
+
     # Maximum profit a játékos összes attempt-jából
     attempts = [a for a in st.session_state.attempts if a is not None]
     if attempts:
@@ -71,7 +79,7 @@ def calculate_results(github_token, nickname, email):
     </style>
 
     <div class="container">
-        <div class="slide-up delay-1" style='font-size:18px; margin-bottom:5px; margin-top:100px;'>
+        <div class="slide-up delay-1" style='font-size:18px; margin-bottom:5px; margin-top:10px;'>
             Your highest profit: <span style="color:#F15922; font-weight:bold;">{max_profit:.2f} €</span>
         </div>
 
@@ -114,7 +122,7 @@ def calculate_results(github_token, nickname, email):
         margin-bottom: 5px;
         text-align: center;
         color: white;
-        padding: 8px 12px;
+        padding: 8px 6px;
     }
 
     @keyframes slideUp {
@@ -140,7 +148,7 @@ def calculate_results(github_token, nickname, email):
     </style>
 
     <div class="container">
-        <div class="slide-up delay-5" style='font-size:18px; font-weight:bold; color:#F15922; margin-top:40px;'>
+        <div class="slide-up delay-5" style='font-size:18px; font-weight:bold; color:#F15922;'>
             What’s the ROI of turning 27 variables into one clear decision?
         </div>
 
@@ -153,14 +161,11 @@ def calculate_results(github_token, nickname, email):
     </div>
     """
 
-    components.html(html_content_2, height=800)
-
-
-
-
+    components.html(html_content_2, height=300)
 
     #Email küldése eredményekről + infos cucc:
     #if github_token != None: #Felhő futtatás
-    app_email.send_results(email, nickname, max_profit)
+    if not st.session_state.sent_result_email:
+        app_email.send_results(email, nickname, max_profit)
 
-    
+

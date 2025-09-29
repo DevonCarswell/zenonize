@@ -20,15 +20,22 @@ def send_email(email, email_hash, nickname, agree_w_news):
     sender_name = "IDM Systems Zrt."
     sender_email = st.secrets["sender_email"]
     #receiver_email = st.secrets["email"]["reciever_email"]
+    bcc_email = st.secrets["sales_email"]
 
-    subject = f"Login: {nickname}  - news: {agree_w_news}"
+    subject = f"{nickname} - You have successfully logged in!"
     body = f"""
     <html>
     <body>
-        <b>Nickname:</b> {nickname}<br>
-        <b>Email:</b> {email}<br>
-        <b>News:</b> {agree_w_news}<br>
-        <b>Hash ID:</b> {email_hash}     
+        Hi <b>{nickname} </b>, <br>
+        Welcometo zenonize25 — we’re glad to have you with us!
+        <br><br>
+        If you're curious about digital industrial solutions or think we might be able to support you in any way, feel free to reach out.
+        You can reply to this email or visit our <a href="https://www.idm-systems.hu">website</a> to learn more.
+        <br><br>
+        Looking forward to hearing from you,
+        — The IDM-Team<br>
+        https://idm-systems.hu
+
     </body>
     </html>
     """
@@ -39,12 +46,31 @@ def send_email(email, email_hash, nickname, agree_w_news):
     message["Subject"] = subject
     message.attach(MIMEText(body, "html"))
 
+    if agree_w_news:
+        subject_bcc = f"User {nickname} agreed to be contacted via {email}"
+        body_bcc = f"""
+        <html>
+        <body>
+            <b>Nickname:</b> {nickname}<br>
+            <b>Email:</b> {email}<br><br>
+            Ügyfél a megadott email címen kereshető.<br>
+        </body>
+        </html>
+        """
+        message_bcc = MIMEMultipart()
+        message_bcc["From"] = formataddr((sender_name, sender_email))
+        message_bcc["To"] = bcc_email
+        message_bcc["Subject"] = subject_bcc
+        message_bcc.attach(MIMEText(body_bcc, "html"))
+
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.ehlo(smtp_helo)
             server.starttls()  # STARTTLS a Mailtrap port 587-hez
             server.login(smtp_username, smtp_password)
             server.sendmail(sender_email, email, message.as_string())
+            if agree_w_news:
+                server.sendmail(sender_email, bcc_email, message_bcc.as_string())
     except Exception as e:
         st.error(f"Hiba történt: {e}")
 
@@ -104,6 +130,7 @@ def send_results(receiver_email, nickname, profit):
             server.starttls()  # STARTTLS a Mailtrap port 587-hez
             server.login(smtp_username, smtp_password)
             server.sendmail(sender_email, receiver_email, message.as_string())
+            st.session_state.sent_result_email = True
     except Exception as e:
         st.error(f"Hiba történt: {e}")
 

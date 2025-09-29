@@ -9,9 +9,6 @@ import app_leaderboard
 from streamlit_scroll_to_top import scroll_to_here
 import app_modify_tables, app_modify_GitTable, app_display_results, app_display_parameters, app_email, app_final_result, app_game_description
 
-
-
-
 # --- SESSION STATE INIT ---
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -38,8 +35,8 @@ if 'scroll_to_top' not in st.session_state:
     st.session_state.scroll_to_top = False
 if 'scroll_to_top_Delay' not in st.session_state:
     st.session_state.scroll_to_top_Delay = False
-
-   
+if "sent_result_email" not in st.session_state:
+   st.session_state.sent_result_email = False
 
 def scroll():
     st.session_state.scroll_to_top = True
@@ -47,7 +44,9 @@ def scroll():
 def scroll_Delay():
     st.session_state.scroll_to_top_Delay = True
 
-
+params = st.query_params
+if "page" in params and params["page"] == "leaderboard":
+    st.session_state.page = "leaderboard"
 
 
 #Local vagy Cloud:
@@ -68,19 +67,35 @@ elif st.session_state.scroll_to_top_Delay:
     st.rerun() 
 
 
+elif st.session_state.page == "leaderboard":
+    app_leaderboard.show_leaderboard()  # run the leaderboard script
+    st.stop()
+
+elif st.session_state.page == "gtc":
+    st.subheader("📄 General Terms and Conditions (GTC)")
+    st.write("""
+    General Terms and Conditions
+    """)
+    if st.button("⬅️ Back"):
+        st.session_state.page = "login"
+        st.rerun()
+    st.stop()  # <- important, prevents login page rendering
+
+# --- Contact consent page ---
+elif st.session_state.page == "contact":
+    st.subheader("📩 Contact Consent")
+    st.write("""
+    PRIVACY POLICY
+    """)
+    if st.button("⬅️ Back"):
+        st.session_state.page = "login"
+        st.rerun()
+    st.stop()  # <- important, prevents login page rendering
 
 # ------------------ LOGIN KEZELÉS ------------------
 elif not st.session_state.logged_in:
-    # Make sure we always have a page state
-    if "page" not in st.session_state:
-        st.session_state.page = "login"
-
-    if st.session_state.page == "leaderboard":
-        app_leaderboard.show_leaderboard()  # run the leaderboard script
-        st.stop()        # stop further execution so only leaderboard shows
-    
      # --- Login Page ---
-    elif st.session_state.page == "login":
+    if st.session_state.page == "login":
         st.image("header.png", width='content')
         st.subheader("Welcome to the Game! 🎮")
         # 🔹 Add Leaderboard button here
@@ -93,21 +108,15 @@ elif not st.session_state.logged_in:
 
         # A részletes Terms szöveg külön szakaszban
         #with st.expander("Detailed Terms and Conditions"):
-        agree = st.checkbox("I agree to the Terms and Conditions - Game *")
-        agree_w_news = st.checkbox("I agree to the Terms and Conditions - News")
-        st.markdown(
-            """
-            <div style='font-size:12px; line-height:1.4; text-align: justify; text-justify: inter-word;'>
-            I hereby consent to the processing of my personal data (nickname, email address) by IDM-Systems Zrt., (hereinafter: Data Controller) for the purpose of receiving newsletters with information about the company’s products, services, promotions, and events. <br><br>
-
-            I confirm that I have read and understood <a href="https://www.idm-systems.hu" target="_blank">IDM-Systems Zrt’s Privacy Notice</a> - for website visitors - and acknowledge that I may withdraw my consent at any time, without giving any reason, by clicking the "Unsubscribe" in the newsletter or by sending an email to privacy@idm-systems.hu.  
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        #st.markdown("") #Üres sor
+        agree = st.checkbox(" I’ve read and accept the General Terms and Conditions(GTC) — I’m ready to play! *")
+        if st.button("📄 View GTC details"):
+            st.session_state.page = "gtc"
+            st.rerun()
         
-
+        agree_w_news = st.checkbox("“Contact me“ — I agree and give my consent to be contacted after the Online Game. ")
+        if st.button("📩 View Contact Consent details"):
+            st.session_state.page = "contact"
+            st.rerun()
 
         # JS script hozzáadása
         st.markdown("""
@@ -116,9 +125,6 @@ elif not st.session_state.logged_in:
         document.body.setAttribute('data-user-theme', theme);
         </script>
         """, unsafe_allow_html=True)
-
-
-
 
         if st.button("Login"):
 
@@ -369,11 +375,3 @@ else:
                     if st.button("❌ No, I'll keep playing!", key=f"confirm_no_{i}"):
                         st.session_state.confirm_finish = False
                         st.rerun()
-
-
-
-
-
-
-
-
