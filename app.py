@@ -28,6 +28,8 @@ if "confirm_finish" not in st.session_state:
     st.session_state.confirm_finish = False
 if "page" not in st.session_state:
     st.session_state.page = "login"
+if "nickname" not in st.session_state:
+    st.session_state.nickname = ""
 
 
 # Inicializálás, ha még nem létezik
@@ -362,7 +364,7 @@ elif not st.session_state.logged_in:
             if email != "":
                 email_valid = app_email.is_valid_email(email)
 
-
+            nickname = nickname.strip()  # Remove leading/trailing whitespace
             # Attempt login
             if email_valid and nickname and agree:
                 

@@ -61,6 +61,9 @@ def show_leaderboard():
             font-family:sans-serif;
             """
 
+        # 🔹 Highlight logged-in user
+        if "nickname" in st.session_state and st.session_state.nickname == nickname:
+            style += "border:5px solid green;"
         # Ordinal suffix (1st, 2nd, 3rd, etc.)
         def ordinal(n):
             return "%d%s" % (n, "tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
