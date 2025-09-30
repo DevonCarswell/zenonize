@@ -73,8 +73,50 @@ elif st.session_state.page == "leaderboard":
 
 elif st.session_state.page == "gtc":
     st.subheader("📄 General Terms and Conditions (GTC)")
-    st.write("""
-    General Terms and Conditions
+    st.markdown("""           
+    https://zenonize.idm-systems.hu/
+
+    This agreement is made and entered into by and between IDM-Systems Zrt. (registered office: 4031 Debrecen, Köntösgát sor 1-3., company registration number: 09-10-000604), as Data Controller (hereinafter referred to as the ‘Data Controller’ or the ‘Service Provider’), and the registered user (hereinafter referred to as the ‘User’) of the online game provided on the website https://zenonize.idm-systems.hu/ (hereinafter: “Online Game”), hereinafter collectively referred to as the ‘Parties’, under the following terms and conditions:
+
+    1.	What the Online Game is about?
+             
+    The Data Controller/Service Provider provides the Online Game available at https://zenonize.idm-systems.hu/ as an online platform designed to offer an interactive simulation of the challenges of modern manufacturing management. The Online Game is accessible via any web browser, mobile application, or other digital device.
+
+    2.	Participation in the Online Game
+             
+    Participation in the Online Game is free of charge but requires registration.
+
+    3.	Registration \
+    The data required for registration are as follows:
+        1.	Email address
+        2.	Nickname  
+                
+    Registration is completed by providing the above data and by accepting the present Terms of Conditions.
+
+    4.	Intellectual Property   
+                
+    The Online Game, including its source code, graphics, music, texts, and other elements, is protected by copyright and constitutes the exclusive property of the Data Controller/Service Provider.
+    The User may use the Online Game solely for personal purposes.
+    It is prohibited to copy, distribute, modify, or use the content of the Game for commercial purposes.
+
+    5.	Limitation of Liability    
+                
+    The Data Controller/Service Provider shall make every effort to ensure the uninterrupted operation of the Online Game but does not guarantee that the Game will be free of errors or continuously available. The Data Controller/Service Provider shall not be liable for indirect damages, loss of profit, or data loss suffered by the User. The Data Controller/Service Provider accepts no responsibility for damages arising from the inaccuracy of data provided during registration.
+
+    6.	Data Protection    
+                
+    The processing of Users’ personal data is carried out in accordance with the [PRIVACY POLICY], available on the Game’s website.
+
+    7.	Amendments   
+    
+    The Data Controller/Service Provider reserves the right to amend the present Terms of Conditions. Such amendments shall enter into force upon their publication on the website. Continued use of the Online Game shall constitute acceptance of the amended Terms.
+
+    8.	Governing Law and Dispute Resolution   
+                
+    These Terms of Conditions shall be governed by the laws of Hungary. The parties shall seek to resolve disputes amicably in the first instance. Should this not be possible, disputes shall fall under the jurisdiction of the competent court at the registered office of the Service Provider.
+    These General Terms and Conditions are available in multiple languages. In the event of any inconsistency or divergence in interpretation between the language versions, the Hungarian version shall prevail and be deemed authoritative.
+
+    If the User does not agree with any provision of these Terms of Conditions, they will not be able to participate in the Online Game.
     """)
     if st.button("⬅️ Back"):
         st.session_state.page = "login"
@@ -83,10 +125,190 @@ elif st.session_state.page == "gtc":
 
 # --- Contact consent page ---
 elif st.session_state.page == "contact":
-    st.subheader("📩 Contact Consent")
-    st.write("""
-    PRIVACY POLICY
-    """)
+    st.subheader("📩 PRIVACY POLICY")
+    st.markdown(f"""
+    https://zenonize.idm-systems.hu/
+    <div>
+        
+    <p>1.	Data Controller’s Information</p>
+    <table id="company-details" style="margin-left:20px;">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td>Company name:</td>
+                    <td>IDM-Systems Zrt.</td>
+                </tr>
+                <tr>
+                    <td>Registered office:</td>
+                    <td>4031 Debrecen, Köntösgát sor 1-3.</td>
+                </tr>
+                <tr>
+                    <td>Company registration number:</td>
+                    <td>09-10-000604</td>
+                </tr>
+                <tr>
+                    <td>Tax number:</td>
+                    <td>27962844-2-09.</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td><a href="mailto:privacy@idm-systems.hu">privacy@idm-systems.hu</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p> 2.	Details of Data Processing</p>
+        <p style="margin-left: 5px;">2.1.	Data processed during the use of the online game available at: <a href="https://zenonize.idm-systems.hu/">https://zenonize.idm-systems.hu/</a></p>
+        <table id="details-of-data-processing-1" style="margin-left:50px;">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td><b>Name of Data Processing:</b></td>
+                    <td>Recording, storing, and deletion of the data provided by the registrant for the purpose of using the online game.</td>
+                </tr>
+                <tr>
+                    <td>Purpose of Data Processing:</td>
+                    <td>Participation in the online game.</td>
+                </tr>
+                <tr>
+                    <td>Legal Basis for Data Processing:</td>
+                    <td><a href="https://net.jogtar.hu/jogszabaly?docid=A1600679.EUP&searchUrl=/gyorskereso?keyword%3Dgdpr%25206.%25201.%2520f">GDPR 6. 1) a)</a> Voluntary consent.</td>
+                </tr>
+                <tr>
+                    <td>Data Processor’s Name and Address:</td>
+                    <td><a href="https://forpsi.hu">forpsi.hu</a><br>
+                        Company name: BlazeArts Kft.<br>
+                        Registered office: 1096 Budapest, Thaly Kálmán 39.<br>
+                        Mailing address: 1096 Budapest, Thaly Kálmán 39.<br>
+                        Company registration number: 01 09 389087<br>
+                        Tax number: 12539833-2-03<br>
+                        EU VAT number: HU12539833<br>
+                        </td>
+                </tr>
+                <tr>
+                    <td>Data Processor’s Activities Related to Data Processing:</td>
+                    <td>Hosting, database, and email services, as well as sending emails from news@idm-systems.hu regarding entry into the game, its completion, and the results.</td>
+                </tr>
+                <tr>
+                    <td>Categories of Personal Data Processed by the Data Controller:</td>
+                    <td>Provided by voluntary consent: email address, nickname</td>
+                </tr>
+                <tr>
+                    <td>Retention Period:</td>
+                    <td>For the duration of participation in the online game.</td>
+                </tr>
+                <tr>
+                    <td>Source of Data:</td>
+                    <td>Provided by voluntary consent.</td>
+                </tr>
+                <tr>
+                    <td>Data Transfers:</td>
+                    <td>None.</td>
+                </tr>
+                <tr>
+                    <td>Legal Basis for Data Transfers:</td>
+                    <td>Not applicable.</td>
+                </tr>
+                <tr>
+                    <td>Scope of Data Subjects:</td>
+                    <td>Individuals participating in the online game.</td>
+                </tr>
+                <tr>
+                    <td>Is Profiling Conducted During the Activity?</td>
+                    <td>No.</td>
+                </tr>
+                <tr>
+                    <td>Are Automated Technologies Used for Profiling?</td>
+                    <td>Not applicable.</td>
+                </tr>
+                <tr>
+                    <td>Unsubscribing / Withdrawal of Consent:</td>
+                    <td>Not applicable.</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-left:5px;">2.2. On the <a href="https://zenonize.idm-systems.hu/">https://zenonize.idm-systems.hu/</a> online game website, the Data Controller provides the possibility to subscribe via the “Contact me” option, whereby the User gives their explicit and voluntary consent for the Data Controller to initiate contact with them within a specified period following the use of the online game.</p>
+        <table id="details-of-data-processing-2" style="margin-left:50px;">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td><b>Name of Data Processing:</b></td>
+                    <td>Recording, storing, and deletion of the data of individuals subscribing via the “Contact me” option.</td>
+                </tr>
+                <tr>
+                    <td>Purpose of Data Processing:</td>
+                    <td>Establishing contact with potential customers, partners.</td>
+                </tr>
+                <tr>
+                    <td>Legal Basis for Data Processing:</td>
+                    <td><a href="https://net.jogtar.hu/jogszabaly?docid=A1600679.EUP&searchUrl=/gyorskereso?keyword%3Dgdpr%25206.%25201.%2520f">GDPR 6. 1) f)</a> Legitimate interest of the Data Controller.</td>
+                </tr>
+                <tr>
+                    <td>Data Processor’s Name and Address:</td>
+                    <td><a href="https://forpsi.hu">forpsi.hu</a><br>
+                        Company name: BlazeArts Kft.<br>
+                        Registered office: 1096 Budapest, Thaly Kálmán 39.<br>
+                        Mailing address: 1096 Budapest, Thaly Kálmán 39.<br>
+                        Company registration number: 01 09 389087<br>
+                        Tax number: 12539833-2-03<br>
+                        EU VAT number: HU12539833<br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Data Processor’s Activities Related to Data Processing:</td>
+                    <td>Hosting, database, and email services, as well as sending the submitter’s data to sales@idm-systems.hu for the purpose of establishing contact.</td>
+                </tr>
+                <tr>
+                    <td>Categories of Personal Data Processed by the Data Controller:</td>
+                    <td>Provided by voluntary consent: email address, nickname</td>
+                </tr>
+                <tr>
+                    <td>Retention Period:</td>
+                    <td>14 days following participation in the online game for the purpose of establishing contact.</td>
+                </tr>
+                <tr>
+                    <td>Source of Data:</td>
+                    <td>Provided by voluntary consent.</td>
+                </tr>
+                <tr>
+                    <td>Data Transfers:</td>
+                    <td>None.</td>
+                </tr>
+                <tr>
+                    <td>Legal Basis for Data Transfers:</td>
+                    <td>Not applicable.</td>
+                </tr>
+                <tr>
+                    <td>Scope of Data Subjects:</td>
+                    <td>Individuals subscribing via the “Contact me” option.</td>
+                </tr>
+                <tr>
+                    <td>Is Profiling Conducted During the Activity?</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Are Automated Technologies Used for Profiling?</td>
+                    <td>Not applicable.</td>
+                </tr>
+                <tr>
+                    <td>Unsubscribing / Withdrawal of Consent:</td>
+                    <td><a href="mailto:privacy@idm-systems.hu">privacy@idm-systems.hu</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>3.	What are your rights in relation to data processing and how can you exercise them?<br>
+            Rights related to data processing and their enforcement:<br>
+            At the postal address or by e-mail indicated in Section 1 you may</p>
+                <p style="margin-left:5px;">a)	request information about the processing of your personal data (this is known as the right of access), <br>
+                b)	request the rectification or erasure of your personal data,<br>
+                c)	request the transfer of your personal data to another controller (this is known as the right to data portability),<br>
+                d)	request the restriction of processing.<br>
+                e)	may object to the processing,<br>
+                f)	can request that the automated decision making does not apply to you,<br>
+                g)	may withdraw the consent to the processing at any time.</p><br>
+        <p style="margin-left:0px;">Further details related to data processing can be found in the document titled [IDM_Systems_Zrt_Privacy_Notice_for_Website_Visitors_20251001], available on the Data Controller’s website.</p>
+    </div>
+   
+    """, unsafe_allow_html=True)
     if st.button("⬅️ Back"):
         st.session_state.page = "login"
         st.rerun()
@@ -109,12 +331,12 @@ elif not st.session_state.logged_in:
         # A részletes Terms szöveg külön szakaszban
         #with st.expander("Detailed Terms and Conditions"):
         agree = st.checkbox(" I’ve read and accept the General Terms and Conditions(GTC) — I’m ready to play! *")
-        if st.button("📄 View GTC details"):
+        if st.button("📄 View GTC"):
             st.session_state.page = "gtc"
             st.rerun()
         
         agree_w_news = st.checkbox("“Contact me“ — I agree and give my consent to be contacted after the Online Game. ")
-        if st.button("📩 View Contact Consent details"):
+        if st.button("📩 View Privacy Policy"):
             st.session_state.page = "contact"
             st.rerun()
 
