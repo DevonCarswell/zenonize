@@ -26,8 +26,8 @@ def send_email(email, email_hash, nickname, agree_w_news):
     body = f"""
     <html>
     <body>
-        Hi <b>{nickname} </b>, <br>
-        Welcometo zenonize25 — we’re glad to have you with us!
+        Hi <b>{nickname}</b>, <br>
+        Welcome to zenonize25 — we’re glad to have you with us!
         <br><br>
         If you're curious about digital industrial solutions or think we might be able to support you in any way, feel free to reach out.
         You can reply to this email or visit our websites to learn more.
