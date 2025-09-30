@@ -32,9 +32,9 @@ parameters = {
     "Used shipper boxes":             {"label": "Used shipper boxes",      "unit": "[pcs]",        "group": "Used raw and packing materials 📦"},
     "Used pallets":                   {"label": "Used pallets",            "unit": "[pcs]",        "group": "Used raw and packing materials 📦"},
     
-    "Used electricity - T100":        {"label": "Used electricity T100",        "unit": "[kW]",         "group": "Energy consumption ⚡"},
-    "Used electricity - T200":        {"label": "Used electricity T200",        "unit": "[kW]",         "group": "Energy consumption ⚡"},
-    "Used electricity - T800":        {"label": "Used electricity T800",        "unit": "[kW]",         "group": "Energy consumption ⚡"},
+    "Used electricity - T100":        {"label": "Used electricity T100",        "unit": "[kWh]",         "group": "Energy consumption ⚡"},
+    "Used electricity - T200":        {"label": "Used electricity T200",        "unit": "[kWh]",         "group": "Energy consumption ⚡"},
+    "Used electricity - T800":        {"label": "Used electricity T800",        "unit": "[kWh]",         "group": "Energy consumption ⚡"},
 }
 
 
