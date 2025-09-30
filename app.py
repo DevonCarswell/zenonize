@@ -323,6 +323,7 @@ elif not st.session_state.logged_in:
         # 🔹 Add Leaderboard button here
         if st.button("🏆 View Leaderboard"):
             st.session_state.page = "leaderboard"
+            scroll()
             st.rerun()
         st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
         email = st.text_input("**E-mail address** * - *it will not be shown publicly*", placeholder="letsplayagame@gmail.com")
@@ -333,11 +334,13 @@ elif not st.session_state.logged_in:
         agree = st.checkbox(" I’ve read and accept the General Terms and Conditions(GTC) — I’m ready to play! *")
         if st.button("📄 View GTC"):
             st.session_state.page = "gtc"
+            scroll()
             st.rerun()
         
         agree_w_news = st.checkbox("“Contact me“ — I agree and give my consent to be contacted after the Online Game. ")
         if st.button("📩 View Privacy Policy"):
             st.session_state.page = "contact"
+            scroll()
             st.rerun()
 
         # JS script hozzáadása
