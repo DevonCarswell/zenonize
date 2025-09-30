@@ -31,7 +31,10 @@ if "page" not in st.session_state:
     st.session_state.page = "login"
 if "nickname" not in st.session_state:
     st.session_state.nickname = ""
-
+if "saved_email" not in st.session_state:
+    st.session_state.saved_email = ""
+if "saved_nickname" not in st.session_state:
+    st.session_state.saved_nickname = ""
 
 # Inicializálás, ha még nem létezik
 if "back_to_info_values" not in st.session_state:
@@ -333,11 +336,15 @@ elif not st.session_state.logged_in:
             scroll()
             st.rerun()
         st.markdown("<hr style='border:1px solid #F15922; margin:0px 0'>", unsafe_allow_html=True) #Vízszintes vonal
-        email = st.text_input("**E-mail address** * - *it will not be shown publicly*", placeholder="letsplayagame@gmail.com")
-        nickname = st.text_input("**Nickname:** * - *this will be your public identifier*", placeholder="I am the winner")
+        email = st.text_input("**E-mail address** * - *it will not be shown publicly*", value=st.session_state.saved_email, placeholder="letsplayagame@gmail.com")
+        nickname = st.text_input("**Nickname:** * - *this will be your public identifier*", value=st.session_state.saved_nickname, placeholder="I am the winner")
 
         # A részletes Terms szöveg külön szakaszban
         #with st.expander("Detailed Terms and Conditions"):
+        if email != st.session_state.saved_email:
+            st.session_state.saved_email = email
+        if nickname != st.session_state.saved_nickname:
+            st.session_state.saved_nickname = nickname
         agree = st.checkbox(" I’ve read and accept the General Terms and Conditions(GTC) — I’m ready to play! *")
         if st.button("📄 View GTC"):
             st.session_state.page = "gtc"
