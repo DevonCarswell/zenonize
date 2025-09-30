@@ -5,9 +5,9 @@ import time
 
 def calculate_results(github_token, nickname, email):
     # Check for leaderboard navigation first
-    col1, col2, col3 = st.columns([1.75, 2, 1])
-    with col2:
-        if st.button("🏆 View Leaderboard"):
+    col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
+    with col3:
+        if st.button("🏆 View Leaderboard", use_container_width=True):
             st.session_state.page = "leaderboard"
             st.rerun()
             return  # Return early to prevent rest of calculations
