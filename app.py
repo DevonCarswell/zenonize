@@ -10,7 +10,8 @@ from streamlit_scroll_to_top import scroll_to_here
 import app_modify_tables, app_modify_GitTable, app_display_results, app_display_parameters, app_email, app_final_result, app_game_description
 
 st.set_page_config(
-page_title="Idm-Systems - zenonIZE game 2025",
+page_title="IDM-Systems - zenonIZE game 2025",
+page_icon="idmLogo1.png",
 )
 
 # --- SESSION STATE INIT ---

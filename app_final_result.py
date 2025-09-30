@@ -161,7 +161,7 @@ def calculate_results(github_token, nickname, email):
     </div>
     """
 
-    components.html(html_content_2, height=300)
+    components.html(html_content_2, height=500)
 
     #Email küldése eredményekről + infos cucc:
     #if github_token != None: #Felhő futtatás
